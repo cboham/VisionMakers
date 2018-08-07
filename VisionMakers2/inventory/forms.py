@@ -19,7 +19,7 @@ class ExportForm(forms.Form):
         return file_name
 
 class PairForm(forms.Form):
-    type_list = Type.objects.order_by().values_list('sku').distinct()
+    type_list = Type.objects.all().order_by().values_list('sku')
     TYPE_CHOICES = ()
     for i in range(len(type_list)):
         #very obnoxious code that I can't figure out a way around

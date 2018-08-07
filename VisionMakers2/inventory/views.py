@@ -9,7 +9,7 @@ from django.http import HttpResponse
 from .forms import ExportForm, MultiTypeForm, PairForm
 from django.contrib.auth.decorators import login_required
 
-@login_required(login_url='')
+@login_required()
 def index(request):
     inventory = Type.objects.all()
     for item in inventory:
@@ -18,6 +18,7 @@ def index(request):
         'inventory': inventory,
         }
     return render(request, 'inventory/index.html', context)
+
 
 class DetailView(generic.DetailView):
     template_name = 'inventory/detail.html'
@@ -112,22 +113,23 @@ def pair_create(request):
             currentObj.pair_set.add(pair)
             currentObj.save()
             # redirect to a new URL:
-            return index(request)
+            return redirect('inventory:submission')
 
     # if a GET (or any other method) we'll create a blank form
     else:
         form = PairForm()
 
     return render(request, 'inventory/pair-form.html', {'form': form})
+
 @login_required
 def  print_page(request, pk):
     obj = get_object_or_404(Type, pk = pk)
 
     return render(request, 'inventory/print.html', {'item': obj})
+
 @login_required
 def search(request):
-    type_list = Type.objects.all()
-    type_filter = TypeFilter(request.GET, queryset=type_list)
+    type_filter = TypeFilter(request.GET, queryset=Type.objects.all())
     return render(request, 'inventory/filter.html', {'filter': type_filter})
 
 

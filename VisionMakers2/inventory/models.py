@@ -3,9 +3,9 @@ from django.urls import reverse
 from django.contrib.auth.models import User
 
 class Type(models.Model):
-    
+
     vendor = models.CharField(max_length = 30)
-    comments = models.CharField(max_length = 264)
+    comments = models.CharField(max_length = 264, blank = True)
     STYLE_CHOICES = (
         ('M' , 'Men\'s'),
         ('W' , 'Women\'s')

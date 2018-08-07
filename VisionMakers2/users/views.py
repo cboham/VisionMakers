@@ -38,7 +38,7 @@ def create_profile(request):
 @login_required
 def user_logout(request):
     logout(request)
-    return HttpResponseRedirect(reverse("users:index"))
+    return HttpResponseRedirect(reverse("users:home"))
 
 def user_login(request):
     if request.method == 'POST':
@@ -48,7 +48,7 @@ def user_login(request):
         if user:
             if user.is_active:
                 login(request, user)
-                return HttpResponseRedirect(reverse("users:index"))
+                return HttpResponseRedirect(reverse("users:home"))
 
             else:
                 return HttpResponse("Account not active")

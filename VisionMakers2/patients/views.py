@@ -3,6 +3,9 @@ from .filters import PatientFilter
 from .models import Patient
 from django.views.generic.edit import UpdateView
 from django.urls import reverse
+from django.contrib.auth.decorators import login_required
+
+@login_required
 def select_patient(request):
     filter = PatientFilter(request.GET, queryset=Patient.objects.all())
     return render(request, 'patients/select_patient.html', {'filter': filter})
@@ -10,11 +13,12 @@ def select_patient(request):
 # def view_patient(request, id):
 #     patient = Patient.objects.all().get(pk = id)
 #     return render(request, 'patients/view_patient.html', {'patient': patient})
-
+@login_required
 def vision_rx(request, pk):
     patient = Patient.objects.all().get(pk = pk)
     ordered_rxs = patient.common_rx_set.all().order_by('exam_date')
     return render(request, 'patients/patient_visionrx.html', {'patient': patient})
+
 
 class PatientUpdate(UpdateView):
     model = Patient
@@ -44,7 +48,6 @@ class PatientUpdate(UpdateView):
         'referred_to_doc',
     ]
     template_name_suffix = '_view_form'
-    # success_url = reverse('patients:select_patient', kwargs={'pk': self.pk})
 
     # class Spectacle_Rx_Update(UpdateView):
     #     model = Spectacle_Rx
