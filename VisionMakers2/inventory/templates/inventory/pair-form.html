@@ -1,0 +1,27 @@
+{% extends 'inventory/base.html' %}
+{% block title %}  Add Existing Frame {%endblock %}
+{% block panel %}<h3>Add Existing Frame </h3> {% endblock %}
+{%block body %}
+
+<div class = "container-fluid">
+<div class = "row">
+<div class = "col-sm-12 col-md-12 col-lg-12">
+<div class = "panel panel-default" "style = width: 60%;">
+<div class = "panel-body" style="max-height: 500px; ">
+	<form class = "form-horizontal" action = "" method = "post">
+		{% csrf_token %}
+		{% include 'inventory/form-template2.html' %}
+		<div class = "form-group">
+			<div class = "">
+				<button class = "btn btn-primary" style= "float:left;" type = "submit">Submit</button>
+			</div>
+		</div>
+	</form>
+
+</div>
+</div>
+</div>
+</div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang = "en">
+<head>
+	<meta charset = "UTF-8">
+	<title>{% block title %}VisionMakers{% endblock %}</title>
+
+	{% load static %}
+<link rel = "stylesheet" type = "text/css" href = "{% static "users/style.css" %}" />
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
+<link href = 'https://fonts.googleapis.com/css?family=Satisfy' rel = 'stylesheet' type = 'text/css'/>
+
+
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+
+
+</head>
+{% if close %}
+<body onload ="myFunction()">
+{% else %}
+<body>
+{% endif %}
+
+<nav id = "navbar" class = "navbar navbar-inverse">
+	<div class = "container-fluid">
+
+		<!--  Header -->
+		<div class = "navbar-header">
+			<button type = "button" class = "navbar-toggle" data-toggle = "collapse" data-target = "#topNavBar">
+				<span class = "icon-bar"></span>
+				<span class = "icon-bar"></span>
+				<span class = "icon-bar"></span>
+			</button>
+			<a class = "navbar-brand" href = "{% url 'inventory:index' %}">VisionMakers</a>
+		</div>
+
+
+		<!-- Items -->
+		<div class = "collapse navbar-collapse" id = "topNavBar">
+			<ul class = "nav navbar-nav">
+				<li class = "">
+					<a href = "{% url 'inventory:index' %}">
+						<span class = "glyphicon glyphicon-tag" aria-hidden = "true"></span>&nbsp;
+						Inventory
+					</a>
+				</li>
+
+				<li class = "">
+					<a href = "{% url 'patients:select_patient' %}">
+						<span class = "glyphicon glyphicon-user" aria-hidden = "true"></span>&nbsp;
+						Patient
+					</a>
+				</li>
+
+				<li class = "">
+          <a href = "#">
+            <span class = "glyphicon glyphicon-calendar" aria-hidden = "true"></span>&nbsp;
+            Calendar
+          </a>
+        </li>
+
+      </ul>
+
+      <form class = "navbar-form navbar-left" role = "search" method = "get" action = "#">
+        {% csrf_token %}
+        <div class = "form-group">
+          <input type = "text" class = "form-control" name = "q" value = "">
+        </div>
+        <button type = "submit" class = "btn btn-default"> Search</button>
+      </form>
+			<ul class = "nav navbar-nav navbar-right">
+        {% if user.is_authenticated %}
+				<li class = "">
+					<a class = "navbar-link" href = "{% url 'users:logout' %}">
+						<span class = "glyphicon glyphicon-off" aria-hidden = "true"></span>&nbsp; Logout
+					</a>
+				</li>
+        {% else %}
+
+        <li>
+          <a class = "navbar-link" href = "{% url 'users:register' %}">
+						<span class = "glyphicon glyphicon-on" aria-hidden = "true"></span>&nbsp; Register new User
+					</a>
+        </li>
+        {% endif %}
+
+			</ul>
+    </div>
+
+
+  </div>
+</nav>
+
+<div class="container">
+
+
+{% if not user.is_authenticated %}
+	<div class="col-md-12">
+		<div class="card card-container" >
+				<img id="profile-img" class="profile-img-card" src="//ssl.gstatic.com/accounts/ui/avatar_2x.png" />
+				<p id="profile-name" class="profile-name-card"></p>
+				<form class="form-signin" action="{% url 'users:login' %}" method = "POST">
+					{% csrf_token %}
+						<span id="reauth-email" class="reauth-email"></span>
+						<!-- <input type="email" id="inputEmail" class="form-control" placeholder="Email address" required autofocus> -->
+		        <input class="form-control" id = "inputEmail" type="text" name="username" placeholder = 'Enter Username'>
+						<input type="password" id="inputPassword" class="form-control" name="password" placeholder="Password" required>
+						<!-- <div id="remember" class="checkbox">
+								<label>
+										<input type="checkbox" value="remember-me"> Remember me
+								</label>
+						</div> -->
+						<button class="btn btn-md btn-primary btn-block btn-signin" type="submit">Sign in</button>
+				</form><!-- /form -->
+				<a href="#" class="forgot-password">
+						Forgot the password?
+				</a>
+		</div><!-- /card-container -->
+</div><!-- /container -->
+{% else %}
+<div class="container">
+	<div class="row">
+			<div class="col-md-6 col-md-offset-3">
+					<div class="panel panel-primary">
+							<div class="panel-heading">
+									<h3 class="panel-title">
+											<span class="glyphicon glyphicon-bookmark"></span> Quick Shortcuts</h3>
+							</div>
+							<div class="panel-body">
+									<div class="row">
+											<div class="col-xs-6 col-md-6">
+												<a href="/admin/" class="btn btn-danger btn-lg btn-panel" role="button"><span class="glyphicon glyphicon-list-alt"></span> <br/>Admin</a>
+												<a href="#" class="btn btn-warning btn-lg btn-panel" role="button"><span class="glyphicon glyphicon-bookmark"></span> <br/>Bookmarks</a>
+												<a href="#" class="btn btn-primary btn-lg btn-panel" role="button"><span class="glyphicon glyphicon-usd"></span> <br/>Sales</a>
+												<a href="#" class="btn btn-primary btn-lg btn-panel" role="button"><span class="glyphicon glyphicon-comment"></span> <br/>Comments</a>
+											</div>
+											<div class="col-xs-6 col-md-6">
+												<a href="#" class="btn btn-success btn-lg btn-panel" role="button"><span class="glyphicon glyphicon-user"></span> <br/>Users</a>
+												<a href="#" class="btn btn-info btn-lg btn-panel" role="button"><span class="glyphicon glyphicon-file"></span> <br/>Notes</a>
+												<a href="#" class="btn btn-primary btn-lg btn-panel" role="button"><span class="glyphicon glyphicon-picture"></span> <br/>Photos</a>
+												<a href="{% url 'inventory:index' %}" class="btn btn-primary btn-lg btn-panel" role="button"><span class="glyphicon glyphicon-tag"></span> <br/>Inventory</a>
+											</div>
+									</div>
+									<a href="http://www.jquery2dotnet.com/" class="btn btn-success btn-lg btn-block" role="button"><span class="glyphicon glyphicon-globe"></span> Website</a>
+							</div>
+					</div>
+			</div>
+	</div>
+</div>
+
+{% endif %}
+  <!-- <div class="jumbotron">
+    <h2 id = "h2">Please Login</h2>
+    <form class="" action="{% url 'users:login' %}" method="post">
+      {% csrf_token %}
+      <div class="form-group">
+        <label for="username">Username:</label>
+        <input type="text" name="username" placeholder = 'Enter Username'>
+      </div>
+      <div class="form-group">
+        <label for="password">Password:</label>
+        <input type="password" name="password">
+      </div>
+
+
+      <input type="submit" name="" value="Login" class = "btn btn-primary btn-lg">
+
+    </form>
+  </div> -->
+</div>
+</body>

@@ -1,0 +1,41 @@
+{% extends 'patients/patient_template.html' %}
+{% block content %}
+<div class="col-md-10">
+  <div class="card" id = "patient-card">
+    <div class="card-body">
+      <div class="row">
+        <div class="col-md-12 patient-header">
+          <h4>{{patient.first|capfirst}} {{patient.middle|capfirst}} {{patient.last|capfirst}} ID: {{patient.id}}</h4>
+          <hr>
+        </div>
+
+        <!-- table for the rx's -->
+        <table class = "table">
+          <tr>
+            <th>Prescription Type</th>
+            <th>Optometrist</th>
+            <th>Rx Date</th>
+            <th></th>
+            {% for rx in patient.common_rx_set.all %}
+          </tr>
+              {% if rx.od_sphere %}
+            <td>Spectacle</td>
+              {% else %}
+            <td>Contact Lenses</td>
+              {% endif %}
+            <td>{{rx.doctor}}</td>
+            <td>{{rx.exam_date}}</td>
+            <td><a href = "#" >Edit/Details</a></td>
+          <!-- for rx in patient -->
+          <tr>
+            {% endfor %}
+
+
+          </tr>
+        </table>
+
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

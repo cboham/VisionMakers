@@ -1,0 +1,167 @@
+
+
+{% extends 'sales/base.html' %}
+
+{% block body %}
+<div class="container">
+  <div class="jumbotron" style = "padding: 30px;">
+    <h3 style = "margin-top: -10px;">Select your filters below, and then press Search</h3>
+    <h5>If you would like to change the attributes of the filtered items, click Update All</h5>
+    <form method="get">
+      <div class="row">
+        {% for item in filter.form %}
+          <div class="col-sm-6 col-md-6 col-lg-6">
+            <div class="form-group" style = "margin:0px;">
+              {{item.label_tag}}
+              {{item}}
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+
+
+      <button class = "btn btn-primary btn-md" type="submit" onclick = >Search</button>
+      <a id = "multiupdate" href="#" class = "btn btn-primary btn-md" onclick = "multiupdate()">Update All <span class = "glyphicon glyphicon-pencil"></span></a>
+    </form>
+  </div>
+</div>
+
+
+
+
+
+<div class = "container">
+  <div class = "row">
+    <div class = "col-md-12">
+      <div class = "table-responsive">
+
+        <div class="table-header" id="headerdiv">
+          <table  class = "table" id="headertable" width="101%" cellpadding="0" cellspacing="0">
+            <thead class = "thead" style = "width:105%;">
+
+              <tr>
+                <th class="header-cell col1">SKU #</th>
+                <th class="header-cell col2">Desc</th>
+                <th class="header-cell col3">Vendor</th>
+                <th class="header-cell col4">Style</th>
+                <th class="header-cell col5">Retail</th>
+                <th class="header-cell col6">On Hand</th>
+                <th class="header-cell col7">Color</th>
+                <th class="header-cell col8">Locations</th>
+                <th class="header-cell col9">Wholesale</th>
+                <th class="header-cell col10">Cost</th>
+                <th class="header-cell col11">Taxable</th>
+                <th class="header-cell col12">Temple</th>
+                <th class="header-cell col13">Size</th>
+                <th class="header-cell col14">Bridge</th>
+                <th class="header-cell col15">A</th>
+                <th class="header-cell col16">B</th>
+                <th class="header-cell col17">ED</th>
+                <th class="header-cell col18">DBL</th>
+                <th class="header-cell col19">Eye</th>
+                <th class="header-cell col20">VID</th>
+                <th class="header-cell col21">HCFA</th>
+                <th class="header-cell col22">On Order</th>
+                <th class="header-cell col23">Reorder Point</th>
+                <th class="header-cell col24">Lead Time</th>
+
+                <th class="header-cell col25">Sold this W</th>
+                <th class="header-cell col26">Sold this M</th>
+                <th class="header-cell col27">Sold this Y</th>
+              </tr>
+            </thead>
+          </table>
+        </div>
+
+        <!-- This thing is so annoying but works.
+        This is a blue square that sits behind the table and fills in
+        this annoying space in the headers of the tables.
+        Comment out to see what I mean, I really tried everything else. -->
+        <div class = "square">
+
+        </div>
+
+
+
+        <div class="table-body" onscroll="document.getElementById('headerdiv').scrollLeft = this.scrollLeft;">
+          <table id="bodytable" width="100%" cellpadding="0" cellspacing="0">
+            <tbody class = "tbody">
+              {% if filter.qs %}
+                {% for item in filter.qs %}
+              <tr  class = "table-body-rows" ondblclick = "detail_type({{item.sku}});"> <!--onmouseover= "hover({{forloop.counter}})" -->
+                <td class="body-cell col1">{{item.sku}}</td>
+                <td class="body-cell col2">{{item.desc|capfirst}} </td>
+                <td class="body-cell col3">{{item.vendor|capfirst}}</td>
+                <td class="body-cell col4">{{item.style|capfirst}}</td>
+                <td class="body-cell col5">${{item.retail|floatformat:2}}</td>
+                <td class="body-cell col6">{{item.on_hand}}</td>
+                <td class="body-cell col7">{{item.color}}</td>
+                <td class="body-cell col8">{{item.locations}}</td>
+
+                <td class="body-cell col9">${{item.wholesale|floatformat:2}}</td>
+                <td class="body-cell col10">${{item.cost|floatformat:2}}</td>
+                {% if item.taxable %}
+                <td class="body-cell col11">Yes</td>
+                {% else %}
+                <td class="body-cell col11">No</td>
+                {% endif %}
+                <td class="body-cell col12">{{item.temple}}</td>
+                <td class="body-cell col13">{{item.size}}</td>
+                <td class="body-cell col14">{{item.bridge}}</td>
+                <td class="body-cell col15">{{item.A}}</td>
+                <td class="body-cell col16">{{item.B}}</td>
+                <td class="body-cell col17">{{item.ED}}</td>
+                <td class="body-cell col18">{{item.DBL}}</td>
+                <td class="body-cell col19">{{item.eye}}</td>
+                <td class="body-cell col20">{{item.VID}}</td>
+                <td class="body-cell col21">{{item.HCFA}}</td>
+                <td class="body-cell col22">{{item.on_order}}</td>
+                <td class="body-cell col23">{{item.reorder_point}}</td>
+                <td class="body-cell col24">{{item.lead_time}}</td>
+                <td class="body-cell col25">{{item.sold_this_week}}</td>
+                <td class="body-cell col26">{{item.sold_this_month}}</td>
+                <td class="body-cell col27">{{item.sold_this_year}}</td>
+
+              </tr>
+
+              {% endfor %}
+              {% else %}
+              <tr>
+                <td>No such types available</td>
+                <tr>
+                  {% endif %}
+                </tbody>
+              </table>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+    <br>
+
+<script type="text/javascript">
+
+  // grabs all of the skus listed to update the list of objects
+  function multiupdate(){
+    var table = document.getElementById('bodytable')
+    var skus = ''
+    document.getElementById('multiupdate').href = "multiupdate/";
+    for (var i = 0; i < table.rows.length; i++){
+
+      if (i == table.rows.length - 1){
+        skus += table.rows[i].cells[0].innerHTML;
+      } else{
+        skus += table.rows[i].cells[0].innerHTML + "_";
+      }
+      console.log(String(i) + " " + skus);
+    }
+    document.getElementById('multiupdate').href += skus;
+  }
+
+  function detail_type(sku){
+    window.location = "/inventory/frame-type/" + sku + "/";
+  }
+</script>
+
+{% endblock %}

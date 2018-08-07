@@ -1,0 +1,20 @@
+{% extends 'inventory/base.html' %}
+{% load staticfiles %}
+{% block title %}Submitted{% endblock %}
+
+{% block body %}
+<div class="container">
+
+
+<div class="jumbotron">
+  <h1 class="display-4">Your changes have been submitted!</h1>
+  <p class="lead">To continue using the inventory, and to see your changes, please refresh the previous page, or you
+    may click the link below to open a new inventory page.</p>
+  <hr class="my-4">
+
+  <p class="lead">
+    <a class="btn btn-primary btn-lg" href="{% url 'inventory:index' %}" role="button">Go to Inventory</a>
+  </p>
+</div>
+</div>
+{% endblock %}

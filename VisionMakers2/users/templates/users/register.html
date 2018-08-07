@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+{% extends 'inventory/base.html' %}
+{% block title %} Create Profile {% endblock %}
+{% block body %}
+<div class="container">
+  <div class="jumbotron">
+    {% if registered %}
+    <h1>Thank you for registering!</h1>
+    {% else %}
+    <h2>Register here!</h2>
+    <h3>Please fill out the form:</h3>
+    <form class="" action="{% url 'users:register'%}" method="post">
+      {% csrf_token %}
+      {{ user_form.as_p}}
+      {{ profile_form.as_p}}
+      <input class = "btn btn-primary btn-md" type="submit" name="" value="Register">
+    </form>
+    {% endif %}
+  </div>
+</div>
+
+
+
+
+{% endblock %}

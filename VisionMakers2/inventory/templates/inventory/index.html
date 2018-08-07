@@ -1,0 +1,545 @@
+{% extends 'inventory/base.html' %}
+{% load static %}
+{% block title %}Inventory {% endblock %}
+{% block body %}
+<script src="{% static "inventory/script.js" %}"></script>
+
+
+
+<div class = "container">
+  <a href="{% url 'inventory:add-type' %}" class="btn btn-success btn-md">
+    <span class="glyphicon glyphicon-plus"></span> Add New Frame
+  </a>
+  <a href="{% url 'inventory:add-pair' %}" class="btn btn-success btn-md">
+    <span class="glyphicon glyphicon-plus"></span> Add Existing Frame
+  </a>
+
+
+  <a href = "{% url 'inventory:export'  %}" style = "display:inline;">
+  <button id = "btn-purple" type = "submit" class = "btn btn-primary btn-md">
+  Export to Excel <span class = "glyphicon glyphicon-export"></span>
+  </button>
+  </a>
+
+  <a href = "{% url 'inventory:search'  %}" style = "display:inline;">
+  <button  type = "submit" class = "btn btn-info btn-md">
+  Filter <span class = "glyphicon glyphicon-export"></span>
+  </button>
+  </a>
+
+  <!-- <button target = "_blank" onclick = "" id = "edit-button" type = "button" class = "btn btn-primary btn-md" style = "display:none;">
+  Edit <span class = "glyphicon glyphicon-pencil"></span>
+  </button> -->
+
+  <a id = "print-form" target = "_blank" href = "{% url 'inventory:print-type' 0 %}" style = "display:none;">
+  <button type = "submit" class = "btn btn-info btn-md">
+  Print <span class = "glyphicon glyphicon-print"></span>
+  </button>
+  </a>
+
+  <!-- <form id = "print-form" target = "_blank" action = "{% url 'inventory:print-type' 0 %}" method = "post" style = "display:none;">
+  {% csrf_token %}
+  <input id = "print-input" type = "hidden" name = "type_id" value = "0"/>
+  <button type = "submit" class = "btn btn-info btn-md">
+  Print <span class = "glyphicon glyphicon-print"></span>
+  </button>
+  </form> -->
+  <form id = "delete-form" action = "{% url 'inventory:delete-type' 0 %}" method = "post" style = "display:none;">
+  {% csrf_token %}
+  <input id = "delete-input" type = "hidden" name = "type_id" value = "0"/>
+  <button type = "submit" class = "btn btn-danger btn-md">
+  Delete <span class = "glyphicon glyphicon-trash"></span>
+  </button>
+  </form>
+
+  <!-- <form id = "edit-button" target = "_blank" action = "{% url 'inventory:edit-type' 0 %}" method = "post" style = "display:none;">
+  {% csrf_token %} -->
+  <a id = "edit-button"  href = "{% url 'inventory:edit-type' 0 %}" style = "display:none;">
+  <button type = "submit" class = "btn btn-primary btn-md">
+  Edit <span class = "glyphicon glyphicon-pencil"></span>
+  </button>
+  </a>
+</div>
+<br/>
+<div class = "container">
+  <div class = "row">
+    <div class = "col-md-12">
+      <div class = "table-responsive">
+
+        <div class="table-header" id="headerdiv">
+          <table  class = "table" id="headertable" width="101%" cellpadding="0" cellspacing="0">
+            <thead class = "thead" style = "width:105%;">
+              <tr>
+                <th class="header-cell col1">SKU #</th>
+                <th class="header-cell col2">Desc</th>
+                <th class="header-cell col3">Vendor</th>
+                <th class="header-cell col4">Style</th>
+                <th class="header-cell col5">Retail</th>
+                <th class="header-cell col6">On Hand</th>
+                <th class="header-cell col7">Color</th>
+                <th class="header-cell col8">Locations</th>
+                <th class="header-cell col9">Wholesale</th>
+                <th class="header-cell col10">Cost</th>
+                <th class="header-cell col11">Taxable</th>
+                <th class="header-cell col12">Temple</th>
+                <th class="header-cell col13">Size</th>
+                <th class="header-cell col14">Bridge</th>
+                <th class="header-cell col15">A</th>
+                <th class="header-cell col16">B</th>
+                <th class="header-cell col17">ED</th>
+                <th class="header-cell col18">DBL</th>
+                <th class="header-cell col19">Eye</th>
+                <th class="header-cell col20">VID</th>
+                <th class="header-cell col21">HCFA</th>
+                <th class="header-cell col22">On Order</th>
+                <th class="header-cell col23">Reorder Point</th>
+                <th class="header-cell col24">Lead Time</th>
+
+                <th class="header-cell col25">Sold this W</th>
+                <th class="header-cell col26">Sold this M</th>
+                <th class="header-cell col27">Sold this Y</th>
+              </tr>
+
+            </thead>
+          </table>
+        </div>
+
+        <!-- This thing is so annoying but works.
+        This is a blue square that sits behind the table and fills in
+        this annoying space in the headers of the tables.
+        Comment out to see what I mean, I really tried everything else. -->
+        <div class = "square">
+
+        </div>
+
+
+
+        <div class="table-body" onscroll="document.getElementById('headerdiv').scrollLeft = this.scrollLeft;">
+          <table id="bodytable" width="100%" cellpadding="0" cellspacing="0">
+            <tbody class = "tbody">
+              {% if not inventory.objects.all %}
+              {% for item in inventory %}
+              <tr value = "yes"  ondblclick = "detail_type({{item.sku}});" onclick = "display({{forloop.counter}})" id = "row{{forloop.counter}}" class = "table-body-rows" > <!--onmouseover= "hover({{forloop.counter}})" -->
+                <td class="body-cell col1">{{item.sku}}</td>
+                <td class="body-cell col2">{{item.desc|capfirst}} </td>
+                <td class="body-cell col3">{{item.vendor|capfirst}}</td>
+                <td class="body-cell col4">{{item.style|capfirst}}</td>
+                <td class="body-cell col5">${{item.retail|floatformat:2}}</td>
+                <td class="body-cell col6">{{item.on_hand}}</td>
+                <td class="body-cell col7">{{item.color}}</td>
+                <td class="body-cell col8">{{item.locations}}</td>
+
+                <td class="body-cell col9">${{item.wholesale|floatformat:2}}</td>
+                <td class="body-cell col10">${{item.cost|floatformat:2}}</td>
+                {% if item.taxable %}
+                <td class="body-cell col11">Yes</td>
+                {% else %}
+                <td class="body-cell col11">No</td>
+                {% endif %}
+                <td class="body-cell col12">{{item.temple}}</td>
+                <td class="body-cell col13">{{item.size}}</td>
+                <td class="body-cell col14">{{item.bridge}}</td>
+                <td class="body-cell col15">{{item.A}}</td>
+                <td class="body-cell col16">{{item.B}}</td>
+                <td class="body-cell col17">{{item.ED}}</td>
+                <td class="body-cell col18">{{item.DBL}}</td>
+                <td class="body-cell col19">{{item.eye}}</td>
+                <td class="body-cell col20">{{item.VID}}</td>
+                <td class="body-cell col21">{{item.HCFA}}</td>
+                <td class="body-cell col22">{{item.on_order}}</td>
+                <td class="body-cell col23">{{item.reorder_point}}</td>
+                <td class="body-cell col24">{{item.lead_time}}</td>
+                <td class="body-cell col25">{{item.sold_this_week}}</td>
+                <td class="body-cell col26">{{item.sold_this_month}}</td>
+                <td class="body-cell col27">{{item.sold_this_year}}</td>
+
+              </tr>
+
+              {% endfor %}
+              {% else %}
+              <tr>
+                <td>no types available</td>
+                <tr>
+                  {% endif %}
+                </tbody>
+              </table>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+
+
+
+
+    <br />
+
+    <div class="container">
+      <div class="row centered-form">
+        <div class="col-xs-12 col-sm-12 col-md-12">
+          <div class="panel">
+            <div id = "5" class="panel-heading">
+              <h3 class="panel-title" id = "title">Data Fields</h3>
+            </div>
+            <div class="panel-body">
+              <form role="form">
+                <div class = "row">
+                  <div class="col-xs-2 col-sm-2 col-md-2">
+                    <div class="form-group">
+                      <label for="sku">Sku #</label>
+                      <input type="text" name="sku" id="sku" class="form-control input-sm" value = "" readonly = "readonly">
+                    </div>
+                  </div>
+                  <div class="col-xs-1 col-sm-1 col-md-1">
+                    <div class="form-group">
+                      <label for="sku">Desc</label>
+                      <input type="text" name="desc" id="desc" class="form-control input-sm" value = "" readonly>
+                    </div>
+                  </div>
+                  <div class="col-xs-1 col-sm-1 col-md-1">
+                    <div class="form-group">
+                      <label for="sku">Style</label>
+                      <input type="text" name="style" id="style" class="form-control input-sm" value = "" readonly>
+                    </div>
+                  </div>
+                  <div class="col-xs-2 col-sm-2 col-md-2">
+                    <div class="form-group">
+                      <label for="sku">Color</label>
+                      <input type="text" name="color" id= "color" class="form-control input-sm" value = "" readonly>
+                    </div>
+                  </div>
+
+
+                  <div class="col-xs-2 col-sm-2 col-md-2">
+                    <div class="form-group">
+                      <label for="sku">Vendor</label>
+                      <input type="text" name="vendor" id="vendor" class="form-control input-sm" value = "" readonly = "readonly">
+                    </div>
+                  </div>
+                  <div class="col-xs-1 col-sm-1 col-md-1">
+                    <div class="form-group">
+                      <label for="sku">VID</label>
+                      <input type="text" name="VID" id="VID" class="form-control input-sm" value = "" readonly>
+                    </div>
+                  </div>
+                  <div class="col-xs-1 col-sm-1 col-md-1">
+                    <div class="form-group">
+                      <label for="sku">HCFA</label>
+                      <input type="text" name="HCFA" id="HCFA" class="form-control input-sm" value = "" readonly>
+                    </div>
+                  </div>
+                  <div class="col-xs-1 col-sm-1 col-md-1">
+                    <div class="form-group">
+                      <label for="sku">A</label>
+                      <input type="text" name="A" id= "A" class="form-control input-sm" value = "" readonly>
+                    </div>
+                  </div>
+                  <div class="col-xs-1 col-sm-1 col-md-1">
+                    <div class="form-group">
+                      <label for="sku">B</label>
+                      <input type="text" name="B" id= "B" class="form-control input-sm" value = "" readonly>
+                    </div>
+                  </div>
+
+
+                </div>
+
+
+
+
+                <div class = "row">
+                  <div class="col-xs-4 col-sm-4 col-md-4">
+                    <div class="form-group">
+                      <label for="sku">Comments</label>
+                      <input type="text" name="comments" id= "comments" class="form-control input-sm" value = "" readonly>
+                    </div>
+                  </div>
+                  <div class="col-xs-2 col-sm-2 col-md-2">
+                    <div class="form-group">
+                      <label for="sku">Locations</label>
+                      <input type="text" name="locations" id="locations" class="form-control input-sm" value = "" readonly>
+                    </div>
+                  </div>
+                  <div class="col-xs-1 col-sm-1 col-md-1">
+                    <div class="form-group">
+                      <label class = "weird-label" for="sku">BV Stock</label>
+                      <input type="text" name="on_hand_bv" id="on_hand_bv" class="form-control input-sm" value = "" readonly = "readonly">
+                    </div>
+                  </div>
+                  <div class="col-xs-1 col-sm-1 col-md-1">
+                    <div class="form-group">
+                      <label class = "weird-label" for="sku">WD Stock</label>
+                      <input type="text" name="on_hand_wd" id="on_hand_wd" class="form-control input-sm" value = "" readonly = "readonly">
+                    </div>
+                  </div>
+
+                  <div class="col-xs-1 col-sm-1 col-md-1">
+                    <div class="form-group">
+                      <label class = "weird-label" for="sku">PA Stock</label>
+                      <input type="text" name="on_hand_pa" id="on_hand_pa" class="form-control input-sm" value = "" readonly = "readonly">
+                    </div>
+                  </div>
+                  <div class="col-xs-1 col-sm-1 col-md-1">
+                    <div class="form-group">
+                      <label for="sku">Bridge</label>
+                      <input type="text" name="bridge" id="bridge" class="form-control input-sm" value = "" readonly>
+                    </div>
+                  </div>
+                  <div class="col-xs-1 col-sm-1 col-md-1">
+                    <div class="form-group">
+                      <label for="sku">Temple</label>
+                      <input type="text" name="temple" id="temple" class="form-control input-sm" value = "" readonly>
+                    </div>
+                  </div>
+                  <div class="col-xs-1 col-sm-1 col-md-1">
+                    <div class="form-group">
+                      <label for="sku">ED</label>
+                      <input type="text" name="ED" id= "ED" class="form-control input-sm" value = "" readonly>
+                    </div>
+                  </div>
+
+
+
+                </div>
+
+                <div class = "row">
+                  <div class="col-xs-2 col-sm-2 col-md-2">
+                    <div class="form-group">
+                      <label for="sku">Wholesale</label>
+                      <input type="text" name="wholesale" id= "wholesale" class="form-control input-sm" value = "" readonly>
+                    </div>
+                  </div>
+                  <div class="col-xs-2 col-sm-2 col-md-2">
+                    <div class="form-group">
+                      <label for="sku">Retail</label>
+                      <input type="text" name="retail" id= "retail" class="form-control input-sm" value = "" readonly>
+                    </div>
+                  </div>
+                  <div class="col-xs-2 col-sm-2 col-md-2">
+                    <div class="form-group">
+                      <label for="sku">Cost</label>
+                      <input type="text" name="cost" id= "cost" class="form-control input-sm" value = "" readonly>
+                    </div>
+                  </div>
+
+                  <div class="col-xs-1 col-sm-1 col-md-1">
+                    <div class="form-group">
+                      <label for="sku">Taxable</label>
+                      <input type="text" name="taxable" id= "taxable" class="form-control input-sm" value = "" readonly>
+                    </div>
+                  </div>
+                  <div class="col-xs-1 col-sm-1 col-md-1">
+                    <div class="form-group">
+                      <label for="sku" class = "weird-label">On Order</label>
+                      <input type="text" name="on_order" id="on_order" class="form-control input-sm" value = "" readonly>
+                    </div>
+                  </div>
+
+
+
+
+                  <div class="col-xs-1 col-sm-1 col-md-1">
+                    <div class="form-group">
+                      <label for="sku">DBL</label>
+                      <input type="text" name="DBL" id= "DBL" class="form-control input-sm" value = "" readonly>
+                    </div>
+                  </div>
+
+                  <div class="col-xs-1 col-sm-1 col-md-1">
+                    <div class="form-group">
+                      <label for="sku">Eye</label>
+                      <input type="text" name="eye" id="eye" class="form-control input-sm" value = "" readonly = "readonly">
+                    </div>
+                  </div>
+
+
+                  <div class="col-xs-2 col-sm-2 col-md-2">
+                    <div class="form-group">
+                      <label for="sku">Size</label>
+                      <input type="text" name="size" id= "size" class="form-control input-sm" value = "" readonly>
+                    </div>
+                  </div>
+
+                </div>
+              <div class = "row" id = "last-row">
+                <div class="col-xs-2 col-sm-2 col-md-2">
+                  <div class="form-group">
+                    <label for="sku">Sold this Week</label>
+                    <input type="text" name="sold_this_week" id= "sold_this_week" class="form-control input-sm" value = "" readonly>
+                  </div>
+                </div>
+
+                <div class="col-xs-2 col-sm-2 col-md-2">
+                  <div class="form-group">
+                    <label for="sku">Sold this Month</label>
+                    <input type="text" name="sold_this_month" id="sold_this_month" class="form-control input-sm" value = "" readonly = "readonly">
+                  </div>
+                </div>
+                <div class="col-xs-2 col-sm-2 col-md-2">
+                  <div class="form-group">
+                    <label for="sku">Sold this Year</label>
+                    <input type="text" name="sold_this_year" id= "sold_this_year" class="form-control input-sm" value = "" readonly>
+                  </div>
+                </div>
+                <div class="col-xs-2 col-sm-2 col-md-2">
+                  <div class="form-group">
+                    <label for="sku">Reorder Point</label>
+                    <input type="text" name="reorder_point" id="reorder_point" class="form-control input-sm" value = "" readonly>
+                  </div>
+                </div>
+                <div class="col-xs-2 col-sm-2 col-md-2">
+                  <div class="form-group">
+                    <label for="sku">Lead Time</label>
+                    <input type="text" name="lead_time" id= "lead_time" class="form-control input-sm" value = "" readonly>
+                  </div>
+                </div>
+
+
+
+                <!-- <div class="col-xs-2 col-sm-2 col-md-2">
+                  <div class="form-group">
+                    <button onclick = "" id = "save-button" type = "button" class = "btn btn-primary btn-md" style = "display:inline;">
+                      Save <span class = "glyphicon glyphicon-pencil"></span>
+                    </button>
+                  </div>
+                </div> -->
+
+              </div>
+
+              </form>
+            </div>
+          </div>
+        </div>
+
+        <!-- <div class="col-xs-1 col-md-1 col-lg-1">
+
+              <div class="panel panel-primary" id = "btnpanel">
+                <div class="panel-heading">
+                    <h3 class="panel-title">
+                        Excel <span class="glyphicon glyphicon-bookmark"></span></h3>
+                </div>
+                <div class="panel-body">
+                    <div class="row">
+
+                        <div class="col-xs-12 col-md-12">
+                          <a href="#" class="btn btn-success btn-sm btnpanel" role="button"><span class="glyphicon glyphicon-user"></span> <br/>Export <br/>Table </a>
+                          <a href="#" class="btn btn-info btn-sm btnpanel" role="button"><span class="glyphicon glyphicon-file"></span> <br/>Notes</a>
+                          <a href="#" class="btn btn-primary btn-sm btnpanel" role="button"><span class="glyphicon glyphicon-picture"></span> <br/>Photos</a>
+                          <a href="#" class="btn btn-primary btn-sm btnpanel" role="button"><span class="glyphicon glyphicon-tag"></span> <br/>Tags</a>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            </div> -->
+          </div>
+        <!-- </div>
+      </div> -->
+    </div>
+
+    {% for item in inventory %}
+    <div class = "container" id = "pair_set_{{ forloop.counter }}" style = "display:none">
+      <div class = "row">
+        <div class = "col-md-12">
+          <div class = "table-responsive">
+
+            <div class="table-header" id="headerdiv">
+              <table  class = "table" id="headertable" width="100%" cellpadding="0" cellspacing="0">
+                <thead class = "thead">
+
+                  <tr>
+                    <th class="header-cell col1">ID #</th>
+                    <th class="header-cell col2">Location</th>
+                    <th class="header-cell col3">Date Added to Inventory</th>
+                    <th class="header-cell col4">Comments</th>
+                  </tr>
+                  </thead>
+                </table>
+              </div>
+              <!-- This thing is so annoying but works.
+              This is a blue square that sits behind the table and fills in
+              this annoying space in the headers of the tables.
+              Comment out to see what I mean, I really tried everything else. -->
+              <div class = "square">
+
+              </div>
+              <div class="table-body" onscroll="document.getElementById('headerdiv').scrollLeft = this.scrollLeft;">
+                <table id="bodytable" width="100%" cellpadding="0" cellspacing="0">
+                  <tbody class = "tbody">
+                    {% if item.pair_set %}
+                    {% for pair in item.pair_set.all %}
+                    <tr value = "yes"   id = "row{{forloop.counter}}" class = "table-body-rows" > <!--onmouseover= "hover({{forloop.counter}})" -->
+                      <td class="body-cell col1">{{pair.pk}}</td>
+                      <td class="body-cell col2">{{pair.location}} </td>
+                      <td class="body-cell col3">{{pair.date_added|date:"d M Y"}}</td>
+                      <td class="body-cell col4">{{pair.comments|truncatechars:15}}</td>
+
+
+                    </tr>
+
+                    {% endfor %}
+                    {% else %}
+                    <tr>
+                      <td>no types available</td>
+                      <tr>
+                        {% endif %}
+                      </tbody>
+                    </table>
+                  </div>
+
+                </div>
+              </div>
+            </div>
+          </div>
+  {% endfor %}
+
+
+
+    <div style = "display:none">
+      <table id = "hidden-table">
+        <thead>
+          <tr>
+            <td>Comments</td>
+            <td> on hand bv </td>
+            <td> on hand wd </td>
+            <td> on hand pa </td>
+          </tr>
+        </thead>
+        <tbody>
+          {% for item in inventory %}
+          <tr id = "row{{forloop.counter}}">
+            <td>{{item.comments}}</td>
+            <td>{{item.get_stock_bv}}</td>
+            <td>{{item.get_stock_wd}}</td>
+            <td>{{item.get_stock_pa}}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+
+      </table>
+    </div>
+
+<br />
+
+
+
+
+    {% endblock %}
+
+
+
+    <!--Things I might need later -->
+    <!-- <td class="body-cell col7"><a class = "btn btn-primary btn-xs glyphicon glyphicon-pencil" href = "{% url 'inventory:edit-type' item.pk %}"></a></td>
+    <td class="body-cell col8"><a class = "btn btn-info btn-xs glyphicon glyphicon-info-sign" href = "{% url 'inventory:detail-type' item.pk %}"></a></td>
+    <td class="body-cell col9">
+    <form action = "{% url 'inventory:delete-type' item.pk %}" method = "post" style = "display:inline;">
+    {% csrf_token %}
+    <input type = "hidden" name = "type_id" value = "{{item.id}}"/>
+    <button type = "submit" class = "btn btn-danger btn-xs">
+    <span class = "glyphicon glyphicon-trash"></span>
+  </button>
+</form>
+</td> -->

@@ -1,0 +1,28 @@
+{% extends 'sales/base.html' %}
+{% block body %}
+<div class="container">
+  <div class="jumbotron" style = "padding: 30px;">
+    <h3 style = "margin-top: -10px;">{{heading}}</h3>
+    {% if heading2 %}
+    <h5>{{heading2}}</h5>
+    {% endif %}
+    <form method="POST">
+      {% csrf_token %}
+      <div class="row">
+        {% for item in form %}
+          <div class="col-sm-6 col-md-6 col-lg-6">
+            <div class="form-group" style = "margin:0px;">
+              {{item.label_tag}}
+              {{item}}
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+
+      {% if form %}
+      <button class = "btn btn-primary btn-md" type="submit" onclick = >Continue</button>
+      {% endif %}
+    </form>
+  </div>
+</div>
+{% endblock %}

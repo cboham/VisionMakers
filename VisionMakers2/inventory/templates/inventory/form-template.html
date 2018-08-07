@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+
+	
+</head>
+<body>
+
+
+
+	{% for field in form %}
+	<div class = "form-group">
+		<div class = "col-sm-offset-2 col-sm-10">
+			<span class = "text-danger small">{{ field.errors }}</span>
+		</div>
+		<label class = "control-label col-sm-2">{{ field.label_tag }}</label>
+		<div class = "col-sm-10">{{ field }}
+			{% if "ype" in field.label_tag  %}
+			<span class = "text-primary medium"><strong>Don't see existing SKU? add, then refresh</strong></span>
+
+			<a href="javascript:window.open('{% url 'inventory:add-type' %}', 'Add Existing Frame', 'width=750,height=600');" class="btn btn-primary btn-xs">
+
+				<span class="glyphicon glyphicon-plus"></span> Add New Frame
+
+			</a>
+
+			{%endif %}
+			{% if "date" in field.label_tag  %}
+			{# add that date thingy #}
+			{%endif %}
+		</div>
+
+	</div>
+
+	{% endfor %}
+</body>
+</html>

@@ -1,0 +1,104 @@
+
+
+{% extends 'sales/base.html' %}
+
+{% block body %}
+<div class="container">
+  <div class="jumbotron" style = "padding: 30px;">
+    <h3 style = "margin-top: -10px;">Select your filters below, and then press Search</h3>
+    <h5>If you would like to change the attributes of the filtered items, click Update All</h5>
+    <form method="get">
+      <div class="row">
+        {% for item in filter.form %}
+          <div class="col-sm-6 col-md-6 col-lg-6">
+            <div class="form-group" style = "margin:0px;">
+              {{item.label_tag}}
+              {{item}}
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+
+
+      <button class = "btn btn-primary btn-md" type="submit" onclick = >Search</button>
+    </form>
+  </div>
+</div>
+
+
+
+
+
+<div class = "container">
+  <div class = "row">
+    <div class = "col-md-12">
+      <div class = "table-responsive">
+
+        <div class="table-header" >
+          <table  class = "table"  width="100%;" cellpadding="0" cellspacing="0">
+            <thead class = "thead" style = "width:100%;">
+
+              <tr>
+                <th class="header-cell col5">ID</th>
+                <th class="header-cell col1">First</th>
+                <th class="header-cell col2" >Middle</th>
+                <th class="header-cell col3">Last</th>
+                <th class="header-cell col4">Date of Birth</th>
+
+
+              </tr>
+            </thead>
+          </table>
+        </div>
+
+        <!-- This thing is so annoying but works.
+        This is a blue square that sits behind the table and fills in
+        this annoying space in the headers of the tables.
+        Comment out to see what I mean, I really tried everything else. -->
+        <div class = "square">
+
+        </div>
+
+        <div class="table-body" onscroll="document.getElementById('headerdiv').scrollLeft = this.scrollLeft;">
+          <table id="bodytable" width="100%" cellpadding="0" cellspacing="0">
+            <tbody class = "tbody">
+              {% if filter.qs %}
+                {% for item in filter.qs %}
+              <tr  class = "table-body-rows" ondblclick = "detail_type({{item.id}});"> <!--onmouseover= "hover({{forloop.counter}})" -->
+                <td class="body-cell col4">{{item.id}}</td>
+                <td class="body-cell col1">{{item.first|capfirst}}</td>
+                <td class="body-cell col2">{{item.middle|capfirst}} </td>
+                <td class="body-cell col3">{{item.last|capfirst}}</td>
+                <td class="body-cell col4">{{item.birthdate}}</td>
+
+                <!-- <td class="body-cell col5"></td>
+                <td class="body-cell col6"></td>
+                <td class="body-cell col7"></td>
+                <td class="body-cell col8"></td> -->
+
+
+              </tr>
+
+              {% endfor %}
+              {% else %}
+              <tr>
+                <td>No such types available</td>
+                <tr>
+                  {% endif %}
+                </tbody>
+              </table>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+    <br>
+    <script type="text/javascript">
+      function detail_type(id){
+        window.location = "/patients/" + "view/" + id + "/";
+      }
+    </script>
+
+
+{% endblock %}

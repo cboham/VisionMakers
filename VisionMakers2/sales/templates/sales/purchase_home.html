@@ -1,0 +1,40 @@
+{% extends 'sales/base.html' %}
+{% block body %}
+
+<div class="container">
+  <div class="jumbotron" style = "padding: 30px;">
+    <h3 style = "margin-top: -10px;">{{patient}}</h3>
+
+    <h5>Add purchases, insurances, billing, and prescriptions before continuing</h5>
+
+
+  </div>
+</div>
+
+
+
+<div class  = >
+  <table id = "hidden-table">
+    <thead>
+      <tr>
+        <td>Comments</td>
+        <td> on hand bv </td>
+        <td> on hand wd </td>
+        <td> on hand pa </td>
+      </tr>
+    </thead>
+    <tbody>
+      {% for item in inventory %}
+      <tr id = "row{{forloop.counter}}">
+        <td>{{item.comments}}</td>
+        <td>{{item.get_stock_bv}}</td>
+        <td>{{item.get_stock_wd}}</td>
+        <td>{{item.get_stock_pa}}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+
+  </table>
+</div>
+
+{% endblock %}

@@ -1,0 +1,297 @@
+{% extends 'inventory/base.html' %}
+{% block title %} {{ object.get_string }}{% endblock %}
+{% block body %}
+
+
+<div class = "container">
+	<div class="row">
+		<a id = "weirdbutton" href="{% url 'inventory:add-pair' %}" class="btn btn-success btn-md">
+			<span class="glyphicon glyphicon-plus"></span> Add Pair
+		</a>
+	</div>
+	<div class = "row">
+		<div class = "col-md-6">
+			<div class = "table-responsive">
+				<br/>
+				<table id = "mytable" class = "table table-hover table-round">
+					<thead class = "thead">
+						<tr>
+							<th>ID</th>
+							<th>Date Added</th>
+							<th>Location</th>
+
+						</tr>
+					</thead>
+
+					<tbody class = "tbody">
+						{% if object.pair_set.all %}
+						{% for pair in object.pair_set.all %}
+						<tr>
+							<td>{{pair.id}}</td>
+							<td>{{pair.date_added}}</td>
+							<td>{{pair.location}}</td>
+
+						</tr>
+
+						{% endfor %}
+						{% else %}
+						<tr><td>There are no pairs of this type<td></tr>
+							{% endif %}
+						</tbody>
+					</table>
+				</div>
+			</div>
+
+			<div class="col-md-6">
+				<br/>
+				<div class="panel panel-primary">
+					<div class="panel panel-heading">
+						<h2 id = "h2">Sales</h2>
+					</div>
+					<div class="panel panel-body">
+						<ul>
+							<li>Sold this Week: {{object.sold_this_week}}</li>
+							<li>Sold this Month: {{object.sold_this_month}}</li>
+							<li>Sold this Year: {{object.sold_this_year}}</li>
+						</ul>
+					</div>
+
+				</div>
+			</div>
+
+		</div>
+	</div>
+
+
+	<div class="container">
+	  <div class="row centered-form">
+	    <div class="col-xs-12 col-sm-12 col-md-12">
+	      <div class="panel panel-primary">
+	        <div class="panel-heading">
+	          <h3 class="panel-title" id = "title">{{object.vendor}}, {{object.desc}}</h3>
+	        </div>
+	        <div class="panel-body">
+	          <form role="form">
+	            <div class = "row">
+	              <div class="col-xs-2 col-sm-2 col-md-2">
+	                <div class="form-group">
+	                  <label for="sku">Sku #</label>
+	                  <input type="text" name="sku" id="sku" class="form-control input-sm" value = "{{object.sku}}" readonly = "readonly">
+	                </div>
+	              </div>
+	              <div class="col-xs-1 col-sm-1 col-md-1">
+	                <div class="form-group">
+	                  <label for="sku">Desc</label>
+	                  <input type="text" name="desc" id="desc" class="form-control input-sm" value = "{{object.desc}}" readonly>
+	                </div>
+	              </div>
+	              <div class="col-xs-1 col-sm-1 col-md-1">
+	                <div class="form-group">
+	                  <label for="sku">Style</label>
+	                  <input type="text" name="style" id="style" class="form-control input-sm" value = "{{object.style}}" readonly>
+	                </div>
+	              </div>
+	              <div class="col-xs-2 col-sm-2 col-md-2">
+	                <div class="form-group">
+	                  <label for="sku">Color</label>
+	                  <input type="text" name="color" id= "color" class="form-control input-sm" value = "{{object.color}}" readonly>
+	                </div>
+	              </div>
+
+
+	              <div class="col-xs-2 col-sm-2 col-md-2">
+	                <div class="form-group">
+	                  <label for="sku">Vendor</label>
+	                  <input type="text" name="vendor" id="vendor" class="form-control input-sm" value = "{{object.vendor}}" readonly = "readonly">
+	                </div>
+	              </div>
+	              <div class="col-xs-1 col-sm-1 col-md-1">
+	                <div class="form-group">
+	                  <label for="sku">VID</label>
+	                  <input type="text" name="VID" id="VID" class="form-control input-sm" value = "{{object.VID}}" readonly>
+	                </div>
+	              </div>
+	              <div class="col-xs-1 col-sm-1 col-md-1">
+	                <div class="form-group">
+	                  <label for="sku">HCFA</label>
+	                  <input type="text" name="HCFA" id="HCFA" class="form-control input-sm" value = "{{object.HCFA}}" readonly>
+	                </div>
+	              </div>
+	              <div class="col-xs-1 col-sm-1 col-md-1">
+	                <div class="form-group">
+	                  <label for="sku">A</label>
+	                  <input type="text" name="A" id= "A" class="form-control input-sm" value = "{{object.A}}" readonly>
+	                </div>
+	              </div>
+	              <div class="col-xs-1 col-sm-1 col-md-1">
+	                <div class="form-group">
+	                  <label for="sku">B</label>
+	                  <input type="text" name="B" id= "B" class="form-control input-sm" value = "{{object.B}}" readonly>
+	                </div>
+	              </div>
+
+
+	            </div>
+
+
+
+
+	            <div class = "row">
+	              <div class="col-xs-4 col-sm-4 col-md-4">
+	                <div class="form-group">
+	                  <label for="sku">Comments</label>
+	                  <input type="text" name="comments" id= "comments" class="form-control input-sm" value = "{{object.comments}}" readonly>
+	                </div>
+	              </div>
+	              <div class="col-xs-2 col-sm-2 col-md-2">
+	                <div class="form-group">
+	                  <label for="sku">Locations</label>
+	                  <input type="text" name="locations" id="locations" class="form-control input-sm" value = "{{object.locations}}" readonly>
+	                </div>
+	              </div>
+	              <div class="col-xs-1 col-sm-1 col-md-1">
+	                <div class="form-group">
+	                  <label for="sku">BV Stock</label>
+	                  <input type="text" name="on_hand_bv" id="on_hand_bv" class="form-control input-sm" value = "{{object.get_stock_bv}}" readonly = "readonly">
+	                </div>
+	              </div>
+	              <div class="col-xs-1 col-sm-1 col-md-1">
+	                <div class="form-group">
+	                  <label for="sku">WD Stock</label>
+	                  <input type="text" name="on_hand_wd" id="on_hand_wd" class="form-control input-sm" value = "{{object.get_stock_wd}}" readonly = "readonly">
+	                </div>
+	              </div>
+
+	              <div class="col-xs-1 col-sm-1 col-md-1">
+	                <div class="form-group">
+	                  <label for="sku">PA Stock</label>
+	                  <input type="text" name="on_hand_pa" id="on_hand_pa" class="form-control input-sm" value = "{{object.get_stock_pa}}" readonly = "readonly">
+	                </div>
+	              </div>
+	              <div class="col-xs-1 col-sm-1 col-md-1">
+	                <div class="form-group">
+	                  <label for="sku">Bridge</label>
+	                  <input type="text" name="bridge" id="bridge" class="form-control input-sm" value = "{{object.bridge}}" readonly>
+	                </div>
+	              </div>
+	              <div class="col-xs-1 col-sm-1 col-md-1">
+	                <div class="form-group">
+	                  <label for="sku">Temple</label>
+	                  <input type="text" name="temple" id="temple" class="form-control input-sm" value = "{{object.temple}}" readonly>
+	                </div>
+	              </div>
+	              <div class="col-xs-1 col-sm-1 col-md-1">
+	                <div class="form-group">
+	                  <label for="sku">ED</label>
+	                  <input type="text" name="ED" id= "ED" class="form-control input-sm" value = "{{object.ED}}" readonly>
+	                </div>
+	              </div>
+
+
+
+	            </div>
+
+	            <div class = "row">
+	              <div class="col-xs-2 col-sm-2 col-md-2">
+	                <div class="form-group">
+	                  <label for="sku">Wholesale</label>
+	                  <input type="text" name="wholesale" id= "wholesale" class="form-control input-sm" value = "{{object.wholesale}}" readonly>
+	                </div>
+	              </div>
+	              <div class="col-xs-2 col-sm-2 col-md-2">
+	                <div class="form-group">
+	                  <label for="sku">Retail</label>
+	                  <input type="text" name="retail" id= "retail" class="form-control input-sm" value = "{{object.retail}}" readonly>
+	                </div>
+	              </div>
+	              <div class="col-xs-2 col-sm-2 col-md-2">
+	                <div class="form-group">
+	                  <label for="sku">Cost</label>
+	                  <input type="text" name="cost" id= "cost" class="form-control input-sm" value = "{{object.cost}}" readonly>
+	                </div>
+	              </div>
+
+	              <div class="col-xs-1 col-sm-1 col-md-1">
+	                <div class="form-group">
+	                  <label for="sku">Taxable</label>
+	                  <input type="text" name="taxable" id= "taxable" class="form-control input-sm" value = "{{object.taxable}}" readonly>
+	                </div>
+	              </div>
+	              <div class="col-xs-1 col-sm-1 col-md-1">
+	                <div class="form-group">
+	                  <label for="sku">On Order</label>
+	                  <input type="text" name="on_order" id="on_order" class="form-control input-sm" value = "{{object.on_order}}" readonly>
+	                </div>
+	              </div>
+
+
+
+
+	              <div class="col-xs-1 col-sm-1 col-md-1">
+	                <div class="form-group">
+	                  <label for="sku">DBL</label>
+	                  <input type="text" name="DBL" id= "DBL" class="form-control input-sm" value = "{{object.DBL}}" readonly>
+	                </div>
+	              </div>
+
+	              <div class="col-xs-1 col-sm-1 col-md-1">
+	                <div class="form-group">
+	                  <label for="sku">Eye</label>
+	                  <input type="text" name="eye" id="eye" class="form-control input-sm" value = "{{object.eye}}" readonly = "readonly">
+	                </div>
+	              </div>
+
+
+	              <div class="col-xs-2 col-sm-2 col-md-2">
+	                <div class="form-group">
+	                  <label for="sku">Size</label>
+	                  <input type="text" name="size" id= "size" class="form-control input-sm" value = "{{object.size}}" readonly>
+	                </div>
+	              </div>
+
+	            </div>
+	          <div class = "row" id = "last-row">
+	            <div class="col-xs-2 col-sm-2 col-md-2">
+	              <div class="form-group">
+	                <label for="sku">Sold this Week</label>
+	                <input type="text" name="sold_this_week" id= "sold_this_week" class="form-control input-sm" value = "{{object.sold_this_week}}" readonly>
+	              </div>
+	            </div>
+
+	            <div class="col-xs-2 col-sm-2 col-md-2">
+	              <div class="form-group">
+	                <label for="sku">Sold this Month</label>
+	                <input type="text" name="sold_this_month" id="sold_this_month" class="form-control input-sm" value = "{{object.sold_this_month}}" readonly = "readonly">
+	              </div>
+	            </div>
+	            <div class="col-xs-2 col-sm-2 col-md-2">
+	              <div class="form-group">
+	                <label for="sku">Sold this Year</label>
+	                <input type="text" name="sold_this_year" id= "sold_this_year" class="form-control input-sm" value = "{{object.sold_this_year}}" readonly>
+	              </div>
+	            </div>
+	            <div class="col-xs-2 col-sm-2 col-md-2">
+	              <div class="form-group">
+	                <label for="sku">Reorder Point</label>
+	                <input type="text" name="reorder_point" id="reorder_point" class="form-control input-sm" value = "{{object.reorder_point}}" readonly>
+	              </div>
+	            </div>
+	            <div class="col-xs-2 col-sm-2 col-md-2">
+	              <div class="form-group">
+	                <label for="sku">Lead Time</label>
+	                <input type="text" name="lead_time" id= "lead_time" class="form-control input-sm" value = "{{object.lead_time}}" readonly>
+	              </div>
+	            </div>
+
+
+
+	          </div>
+
+	          </form>
+	        </div>
+	      </div>
+	    </div>
+	  </div>
+	</div>
+
+{% endblock %}
