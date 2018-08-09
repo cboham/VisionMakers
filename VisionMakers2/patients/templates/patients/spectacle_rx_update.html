@@ -1,33 +1,30 @@
-<!DOCTYPE html>
-
 {% extends 'patients/patient_template.html' %}
 
 {% block content %}
-
-    <div class="col-md-10">
-      <div class="card" id = "patient-card">
-        <div class="card-body">
+<div class="col-md-10">
+  <div class="card" id = "patient-card">
+    <div class="card-body">
+      <div class="row">
+        <div class="col-md-12 patient-header">
+          <h3>{{patient.first|capfirst}} {{patient.middle|capfirst}} {{patient.last|capfirst}} ID: {{patient.id}},
+            Age: {{patient.age}},   Spectacle, Date: {{object.exam_date|date:"m/d/y"}}
+          </h3>
+          <hr>
           <div class="row">
-            <div class="col-md-12 patient-header">
-              <h3>{{patient.first|capfirst}} {{patient.middle|capfirst}} {{patient.last|capfirst}} ID: {{patient.id}}</h3>
-              <hr>
-            </div>
-          </div>
-          <div class="row">
-            {{form.errors}}
+            <span style = "color:red;">{{form.errors}}</span>
             <form  method = "post">
               <div class="col-md-3 padded">
                 {% csrf_token%}
                 {% for item in form %}
-                {% if forloop.counter is 7 %}
+                {% if forloop.counter is 6 %}
               </div>
               <div class="col-md-3 padded">
                 {% endif %}
-                {% if forloop.counter is 13 %}
+                {% if forloop.counter is 11 %}
               </div>
               <div class="col-md-3 padded">
                 {% endif %}
-                {% if forloop.counter is 19 %}
+                {% if forloop.counter is 16 %}
               </div>
               <div class="col-md-3 padded">
                 {% endif %}
@@ -53,32 +50,19 @@
             </div>
             </div>
           </form>
-
-
-
-            </div>
           </div>
+        </div>
+      </div>
+
+
+
 
         </div>
       </div>
+
     </div>
   </div>
 </div>
-
-
-<!-- Bootstrap core JavaScript
-================================================== -->
-<!-- Placed at the end of the document so the pages load faster -->
-<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-<script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery-slim.min.js"><\/script>')</script>
-<script src="../../assets/js/vendor/popper.min.js"></script>
-<script src="../../dist/js/bootstrap.min.js"></script>
-
-<!-- Icons -->
-<script src="https://unpkg.com/feather-icons/dist/feather.min.js"></script>
-<script>
-feather.replace()
-</script>
-
-
+</div>
+</div>
 {% endblock %}

@@ -22,7 +22,7 @@
 										<div class="form-group" style = "">
 											<label>{{field.label_tag}}</label>
 											{{ field }}
-
+											{{ field.errors }}
 										<span class = "text-primary medium"><strong>Don't see existing SKU? add, then refresh</strong></span>
 
 						   				 <a href="{% url 'inventory:add-type' %}" class="btn btn-primary btn-xs">

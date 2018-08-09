@@ -217,3 +217,11 @@ div h5{
 hr{
 	margin: 10px !important;
 }
+
+#buttoncontainer{
+	background-color: white;
+	border-radius:4px !important;
+	margin-top: 5px;
+	padding: 5px;
+	width:auto;
+}

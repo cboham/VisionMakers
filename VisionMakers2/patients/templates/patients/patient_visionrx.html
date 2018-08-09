@@ -6,7 +6,9 @@
       <div class="row">
         <div class="col-md-12 patient-header">
           <h4>{{patient.first|capfirst}} {{patient.middle|capfirst}} {{patient.last|capfirst}} ID: {{patient.id}}</h4>
-          <hr>
+
+
+
         </div>
 
         <!-- table for the rx's -->
@@ -24,8 +26,12 @@
             <td>Contact Lenses</td>
               {% endif %}
             <td>{{rx.doctor}}</td>
-            <td>{{rx.exam_date}}</td>
-            <td><a href = "#" >Edit/Details</a></td>
+            <td>{{rx.exam_date|date:"m/d/y"}}</td>
+            {% if rx.od_sphere %}
+            <td><a href = "{% url 'patients:spectacle-update' rx.id %}" >Edit/Details</a></td>
+            {% else %}
+            <td><a href = "{% url 'patients:contact-lens-update' rx.id %}" >Edit/Details</a></td>
+            {% endif %}
           <!-- for rx in patient -->
           <tr>
             {% endfor %}
@@ -33,9 +39,14 @@
 
           </tr>
         </table>
-
       </div>
     </div>
   </div>
+  <div class="container col-md-4" id = 'buttoncontainer'>
+    <a href="{% url 'patients:spectacle-create' patient_id=patient.pk %}" class = 'btn btn-primary btn-md' >Add Spectacle Rx</a>
+    <a href="{% url 'patients:contact-lens-create' patient_id=patient.pk %}" class = 'btn btn-primary btn-md' >Add Contact Lens Rx</a>
+
+  </div>
+
 </div>
 {% endblock %}

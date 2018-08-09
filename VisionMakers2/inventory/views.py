@@ -1,3 +1,7 @@
+# take a look at existing frame list
+# highlight rows on patient search
+
+
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import Type, Pair
 from django.views.generic.edit import CreateView, UpdateView, DeleteView

@@ -5,8 +5,8 @@
 {% block body %}
 <div class="container">
   <div class="jumbotron" style = "padding: 30px;">
-    <h3 style = "margin-top: -10px;">Select your filters below, and then press Search</h3>
-    <h5>If you would like to change the attributes of the filtered items, click Update All</h5>
+    <h3 style = "margin-top: -10px;">Patient Search</h3>
+    <h5>Double click on a patient to see their info</h5>
     <form method="get">
       <div class="row">
         {% for item in filter.form %}
@@ -69,7 +69,7 @@
                 <td class="body-cell col1">{{item.first|capfirst}}</td>
                 <td class="body-cell col2">{{item.middle|capfirst}} </td>
                 <td class="body-cell col3">{{item.last|capfirst}}</td>
-                <td class="body-cell col4">{{item.birthdate}}</td>
+                <td class="body-cell col4">{{item.birthdate|date:'m/d/y'}}</td>
 
                 <!-- <td class="body-cell col5"></td>
                 <td class="body-cell col6"></td>

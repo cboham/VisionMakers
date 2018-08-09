@@ -474,7 +474,7 @@
                     <tr value = "yes"   id = "row{{forloop.counter}}" class = "table-body-rows" > <!--onmouseover= "hover({{forloop.counter}})" -->
                       <td class="body-cell col1">{{pair.pk}}</td>
                       <td class="body-cell col2">{{pair.location}} </td>
-                      <td class="body-cell col3">{{pair.date_added|date:"d M Y"}}</td>
+                      <td class="body-cell col3">{{pair.date_added|date:"m/d/y"}}</td>
                       <td class="body-cell col4">{{pair.comments|truncatechars:15}}</td>
 
 

@@ -91,6 +91,8 @@ class Spectacle_Rx(Common_Rx):
 
     sv_reading = models.BooleanField()
     sv_distance = models.BooleanField()
+    def get_absolute_url(self):
+        return reverse('patients:spectacle-update', kwargs={'pk': self.pk})
 
 class Contact_Lens_Rx(Common_Rx):
     od_base_curve = models.IntegerField()
@@ -106,3 +108,6 @@ class Contact_Lens_Rx(Common_Rx):
     os_ax = models.IntegerField()
     os_diam = models.IntegerField()
     os_add = models.IntegerField()
+
+    def get_absolute_url(self):
+        return reverse('patients:contact-lens-update', kwargs={'pk': self.pk})
