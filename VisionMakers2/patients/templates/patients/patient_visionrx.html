@@ -7,8 +7,6 @@
         <div class="col-md-12 patient-header">
           <h4>{{patient.first|capfirst}} {{patient.middle|capfirst}} {{patient.last|capfirst}} ID: {{patient.id}}</h4>
 
-
-
         </div>
 
         <!-- table for the rx's -->
@@ -39,14 +37,15 @@
 
           </tr>
         </table>
+        <div class="container col-md-4" id = 'buttoncontainer' style = "margin-bottom:4px;">
+          <a href="{% url 'patients:spectacle-create' patient_id=patient.pk %}" class = 'btn btn-primary btn-md' >Add Spectacle Rx</a>
+          <a href="{% url 'patients:contact-lens-create' patient_id=patient.pk %}" class = 'btn btn-primary btn-md' >Add Contact Lens Rx</a>
+
+        </div>
       </div>
     </div>
   </div>
-  <div class="container col-md-4" id = 'buttoncontainer'>
-    <a href="{% url 'patients:spectacle-create' patient_id=patient.pk %}" class = 'btn btn-primary btn-md' >Add Spectacle Rx</a>
-    <a href="{% url 'patients:contact-lens-create' patient_id=patient.pk %}" class = 'btn btn-primary btn-md' >Add Contact Lens Rx</a>
 
-  </div>
 
 </div>
 {% endblock %}

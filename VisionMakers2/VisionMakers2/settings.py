@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'users',
     'sales',
     'localflavor',
+    'insurance',
     'patients',
     'django_filters',
     'polymorphic',
@@ -126,3 +127,12 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 LOGIN_URL = '/login/'
+
+
+# Email Information, Change to more permanent solution for production
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_USE_TLS = True
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = 'visionmakers00@gmail.com'
+EMAIL_HOST_PASSWORD = 'vmakers13'
+EMAIL_PORT = 587

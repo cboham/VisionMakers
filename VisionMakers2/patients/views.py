@@ -1,12 +1,14 @@
 from django.shortcuts import render
 from .filters import PatientFilter
-from .models import Patient, Spectacle_Rx, Contact_Lens_Rx, Common_Rx
+from .models import Patient, Spectacle_Rx, Contact_Lens_Rx, Common_Rx, Vision_Ins, Medical_Ins
 from django.views.generic.edit import UpdateView, CreateView
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 from django.views import generic
 from django.views.generic.detail import DetailView
 from django.core.mail import send_mail
+from django.conf import settings
+from django.http import HttpResponse
 
 @login_required
 def select_patient(request):
@@ -22,6 +24,11 @@ def vision_rx(request, pk):
     ordered_rxs = patient.common_rx_set.all().order_by('exam_date')
     return render(request, 'patients/patient_visionrx.html', {'patient': patient})
 
+@login_required
+def insurance_summary(request, pk):
+    patient = Patient.objects.all().get(pk = pk)
+    ordered_rxs = patient.common_rx_set.all().order_by('pk')
+    return render(request, 'patients/insurance_summary.html', {'patient': patient})
 
 class PatientUpdate(UpdateView):
     model = Patient
@@ -143,6 +150,7 @@ class SpectacleRxCreate(CreateView):
         context = super(SpectacleRxCreate, self).get_context_data(**kwargs)
         patient = Patient.objects.all().get(pk = self.kwargs['patient_id'])
         context['patient'] = patient
+        context['create'] = True
         return context
 
     def form_valid(self, form):
@@ -175,20 +183,71 @@ class ContactLensRxCreate(CreateView):
         context = super(ContactLensRxCreate, self).get_context_data(**kwargs)
         patient = Patient.objects.all().get(pk = self.kwargs['patient_id'])
         context['patient'] = patient
+        context['create'] = True
         return context
 
     def form_valid(self, form):
         form.instance.patient = Patient.objects.all().get(pk=self.kwargs['patient_id'])
         return super().form_valid(form)
-    
 
-    # def email_rx(request, common_id):
-    #     rx = Common_Rx.objects.all().get(pk = common_id)
-    #     if rx.os_sphere:
-    #         type = 'Spectacle'
-    #     else:
-    #         type = 'Contact Lens'
-    #     send_mail(
-    #         subject = type + ' Rx',
-    #         message =
-    #         )
+class MedicalInsDetail(UpdateView):
+    template_name = 'patients/insurance_medical_detail.html'
+    model = Medical_Ins
+    fields = [
+        'member_id',
+        'company_name',
+        'plan_name',
+        'relation_to_insured',
+        'bill_payer',
+        'bp_address1',
+        'bp_address2',
+        'bp_city',
+        'bp_state',
+        'bp_zip',
+    ]
+    def get_context_data(self, **kwargs):
+        context = super(MedicalInsDetail, self).get_context_data(**kwargs)
+        patient = self.object.patient
+        context['patient'] = patient
+        return context
+
+class VisionInsDetail(UpdateView):
+    template_name = 'patients/insurance_vision_detail.html'
+    model = Vision_Ins
+    fields = [
+        'member_id',
+        'company_name',
+        'plan_name',
+        'relation_to_insured',
+        'bill_payer',
+        'bp_address1',
+        'bp_address2',
+        'bp_city',
+        'bp_state',
+        'bp_zip',
+    ]
+    def get_context_data(self, **kwargs):
+        context = super(VisionInsDetail, self).get_context_data(**kwargs)
+        patient = self.object.patient
+        context['patient'] = patient
+        return context
+
+@login_required
+def email_rx(request, pk):
+    rx = Common_Rx.objects.all().get(pk = pk)
+    if rx.class_name() is 'spectacle':
+        type = 'Spectacle'
+    else:
+        type = 'Contact Lens'
+    message = ''
+    dict = rx.dictionary()
+    for key, value in dict.items():
+        message += key + ' - ' + str(value) + '\n'
+    print(message)
+    send_mail(
+        subject = type + ' Rx',
+        message = message,
+        from_email= settings.EMAIL_HOST_USER,
+        recipient_list=['cboham10@gmail.com'],
+    )
+    return HttpResponse('I think the email sent')
